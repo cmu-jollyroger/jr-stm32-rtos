@@ -7,8 +7,8 @@
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty ofï¿½
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.ï¿½ See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
@@ -28,8 +28,10 @@
 #ifndef __PROTOCOL_H__
 #define __PROTOCOL_H__
 
+#include <stdint.h>
 #include "stm32f4xx_hal.h"
 
+#define UP_REG_ID    0xA0  //up layer regional id
 #define HEADER_LEN   sizeof(frame_header_t)
 #define CMD_LEN      2    //cmdid bytes
 #define CRC_LEN      2    //crc16 bytes

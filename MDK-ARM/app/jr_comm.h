@@ -7,8 +7,8 @@
  *  (at your option) any later version.
  *
  *  This program is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of 
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty ofï¿½
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.ï¿½ See the
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
@@ -28,7 +28,9 @@
 #ifndef __JR_COMM_H__
 #define __JR_COMM_H__
 
+#include <stdint.h>
 #include "stm32f4xx_hal.h"
+#include "../../Drivers/STM32F4xx_HAL_Driver/Inc/stm32f4xx_ll_usb.h"
 
 /** @brief  Length of PC FIFO buffer */
 #define COMPUTER_FIFO_BUFLEN (500)
@@ -62,8 +64,14 @@ typedef enum
 	TOF_3_OFFLINE        = 8,
 	TOF_4_OFFLINE        = 9,
 	TOF_5_OFFLINE        = 10,
-  CHASSIS_CONFIG_ERR   = 11,
-  ERROR_LIST_LENGTH    = 12,
+  SPD_P_OFFLINE        = 11,
+  SPD_I_OFFLINE        = 12,
+  SPD_D_OFFLINE        = 13,
+  POS_P_OFFLINE        = 14,
+  POS_I_OFFLINE        = 15,
+  POS_D_OFFLINE        = 16,
+  CHASSIS_CONFIG_ERR   = 17,
+  ERROR_LIST_LENGTH    = 18,
 } err_id_e;
 
 /** @brief  First offline error ID */
@@ -118,6 +126,12 @@ typedef __packed struct
 	int16_t tof_3;
 	int16_t tof_4;
 	int16_t tof_5;
+	float spd_p;
+  float spd_i;
+  float spd_d;
+  float pos_p;
+  float pos_i;
+  float pos_d;
 	uint8_t sw_l;           /**< left limit switch */
 	uint8_t sw_r;           /**< right limit switch */
 } chassis_info_t;
