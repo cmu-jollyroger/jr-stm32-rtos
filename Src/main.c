@@ -28,6 +28,7 @@
 #include "comm_task.h"
 #include "tof_task.h"
 #include "sys_config.h"
+#include "MeEncoderNew.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -126,6 +127,9 @@ int main(void)
 	/* Initialize TOF sensors */
 	VL53L1_TOF_Config();
 	VL53L1_TOF_Init();
+	
+	/* Initialize MeEncoder Driver */
+	MeEncoderNew_Init();
   
 	/* USER CODE BEGIN 2 */
 	communicate_param_init();

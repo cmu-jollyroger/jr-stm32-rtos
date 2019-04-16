@@ -731,6 +731,11 @@
               <FileType>1</FileType>
               <FilePath>.\driver\tof.c</FilePath>
             </File>
+            <File>
+              <FileName>MeEncoderNew.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\Locomotion\MeEncoderNew.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

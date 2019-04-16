@@ -30,7 +30,7 @@ void VL53L1_TOF_Config() {
 		tof_sensors[i].port = xshut[i].port;
 		tof_sensors[i].mask = xshut[i].mask;
 		tof_sensors[i].valid = 0;
-		tof_sensors[i].dev.I2cHandle = &hi2c1;
+		tof_sensors[i].dev.I2cHandle = &hi2c3;
 		tof_sensors[i].dev.I2cDevAddr = 0x29 << 1; // default address
 	}
 	
