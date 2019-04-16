@@ -24,8 +24,7 @@ void tof_task(void const * argu)
 	static VL53L1_RangingMeasurementData_t RangingData;
 	VL53L1_DEV Dev = &tof_sensors[0].dev;
 	
-	while (1) {
-	}
+	while (1) {}
 	
   /* Infinite loop */
   while (1) {
