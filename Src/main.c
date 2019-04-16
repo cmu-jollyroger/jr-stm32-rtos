@@ -124,9 +124,8 @@ int main(void)
   MX_I2C3_Init();
 	
 	/* Initialize TOF sensors */
-	// BUG: GPIO initialization will freeze device, investigate.
-	//VL53L1_TOF_Config();
-	//VL53L1_TOF_Init();
+	VL53L1_TOF_Config();
+	VL53L1_TOF_Init();
   
 	/* USER CODE BEGIN 2 */
 	communicate_param_init();
