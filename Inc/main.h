@@ -29,7 +29,6 @@ extern "C" {
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
-#include "usart.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -43,7 +42,8 @@ extern "C" {
 
 /* Exported constants --------------------------------------------------------*/
 /* USER CODE BEGIN EC */
-
+extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef hi2c3;
 /* USER CODE END EC */
 
 /* Exported macro ------------------------------------------------------------*/
@@ -81,7 +81,13 @@ void Error_Handler(void);
 #define TOF_XSHUT_4_GPIO_Port GPIOB
 #define TOF_XSHUT_3_Pin GPIO_PIN_5
 #define TOF_XSHUT_3_GPIO_Port GPIOB
+#define LIMIT_SW_L_Pin GPIO_PIN_6
+#define LIMIT_SW_L_GPIO_Port GPIOB
+#define LIMIT_SW_R_Pin GPIO_PIN_7
+#define LIMIT_SW_R_GPIO_Port GPIOB
+
 /* USER CODE BEGIN Private defines */
+#define NUM_TOFS (6)
 
 /* USER CODE END Private defines */
 

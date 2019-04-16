@@ -56,7 +56,7 @@ typedef struct
   int16_t         position_ref;
 } chassis_t;
 
-void chassis_task(void const * argument);
+void chassis_task(void const *argu);
 
 void chassis_param_init(void);
 void power_limit_handler(void);

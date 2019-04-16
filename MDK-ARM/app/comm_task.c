@@ -24,6 +24,8 @@ static unpack_data_t pc_unpack_obj;
 
 chassis_states_t glb_chassis_states;
 
+TaskHandle_t uplinkTaskHandle;
+
 void communicate_param_init(void)
 {
   
@@ -54,12 +56,16 @@ void communicate_param_init(void)
   pc_unpack_obj.unpack_step = STEP_HEADER_SOF;
   
   memset(&glb_chassis_states, 0, sizeof(chassis_states_t));
-  
-  pc_send_mesg.version_info_data.num[0] = 2;
-  pc_send_mesg.version_info_data.num[1] = 0;
-  pc_send_mesg.version_info_data.num[2] = 1;
-  pc_send_mesg.version_info_data.num[3] = 8;
-	
+}
+
+void uplink_task(void const *argu)
+{
+	while (1)
+	{
+		/* TODO: do uplink stuff */
+		HAL_UART_Transmit(&huart2, (uint8_t *)"hi\r\n", 4, 100);
+		HAL_Delay(1000);
+	}
 }
 
 /* USER CODE BEGIN Header_comm_task */
@@ -72,17 +78,40 @@ void communicate_param_init(void)
 void comm_task(void const *argu)
 {
   /* USER CODE BEGIN comm_task */
-  /* Infinite loop */
-  for(;;)
+  osEvent event;
+	
+	taskENTER_CRITICAL();
+	/* Setup uplink thread */
+	computer_uart_init();
+	
+	osThreadDef(taskUplink, uplink_task, osPriorityNormal, 0, 256);
+	uplinkTaskHandle = osThreadCreate(osThread(taskUplink), NULL);
+	taskEXIT_CRITICAL();
+	
+	//HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	
+  while (1)
   {
-		HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
-		HAL_UART_Transmit(&huart2, (uint8_t *)"hello\r\n", 7, 100);
+		event = osSignalWait(PC_UART_TX_SIGNAL | \
+		                     PC_UART_IDLE_SIGNAL, osWaitForever);
 		
-		while (1) {
+		if (event.status == osEventSignal) {
+			// receive pc data puts fifo
+			if (event.value.signals & PC_UART_IDLE_SIGNAL) {
+				dma_buffer_to_unpack_buffer(&pc_rx_obj, UART_IDLE_IT);
+				unpack_fifo_data(&pc_unpack_obj, UP_REG_ID);
+				
+				// blink LED2 as life indicator
+				HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+			}
 			
+			if (event.value.signals & PC_UART_TX_SIGNAL) {
+				send_packed_fifo_data(&pc_txdata_fifo, UP_REG_ID);
+			}
 		}
-			
-    osDelay(1000);
+		
+		//HAL_UART_Transmit(&huart2, (uint8_t *)"hello\r\n", 7, 100);
+    //osDelay(1000);
   }
   /* USER CODE END comm_task */
 }

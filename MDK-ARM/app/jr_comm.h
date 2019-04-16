@@ -29,6 +29,7 @@
 #define __JR_COMM_H__
 
 #include "stm32f4xx_hal.h"
+#include "communication.h"
 
 /** @brief  Length of PC FIFO buffer */
 #define COMPUTER_FIFO_BUFLEN (500)

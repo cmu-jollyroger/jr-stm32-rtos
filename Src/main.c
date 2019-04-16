@@ -19,9 +19,15 @@
 /* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
+#include "stm32xxx_hal.h"
+
 #include "main.h"
+#include "stdio.h"
 #include "cmsis_os.h"
 #include "chassis_task.h"
+#include "comm_task.h"
+#include "tof.h"
+#include "sys_config.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
@@ -48,10 +54,12 @@ I2C_HandleTypeDef hi2c1;
 I2C_HandleTypeDef hi2c3;
 
 UART_HandleTypeDef huart2;
+DMA_HandleTypeDef hdma_usart2_rx;
 
 osThreadId taskChassisHandle;
 osThreadId taskTOFHandle;
 osThreadId taskCommHandle;
+
 /* USER CODE BEGIN PV */
 
 /* USER CODE END PV */
@@ -59,12 +67,11 @@ osThreadId taskCommHandle;
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
+static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C3_Init(void);
-
 void tof_task(void const * argument);
-void comm_task(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -72,6 +79,14 @@ void comm_task(void const * argument);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+
+/* Debug print message redirect to huart interface */
+PUTCHAR_PROTOTYPE
+{
+	HAL_UART_Transmit(&COMPUTER_HUART, (uint8_t*)&ch, 1, 0xFFFF);
+  return ch;
+}
 
 /* USER CODE END 0 */
 
@@ -103,10 +118,18 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_USART2_UART_Init();
-  MX_I2C1_Init(); // Motor controllers
-  MX_I2C3_Init(); // TOF's
-  /* USER CODE BEGIN 2 */
+  MX_I2C1_Init();
+  MX_I2C3_Init();
+	
+	/* Initialize TOF sensors */
+	// BUG: GPIO initialization will freeze device, investigate.
+	//VL53L1_TOF_Config();
+	//VL53L1_TOF_Init();
+  
+	/* USER CODE BEGIN 2 */
+	communicate_param_init();
 
   /* USER CODE END 2 */
 
@@ -303,6 +326,21 @@ static void MX_USART2_UART_Init(void)
 
 }
 
+/** 
+  * Enable DMA controller clock
+  */
+static void MX_DMA_Init(void) 
+{
+  /* DMA controller clock enable */
+  __HAL_RCC_DMA1_CLK_ENABLE();
+
+  /* DMA interrupt init */
+  /* DMA1_Stream5_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Stream5_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Stream5_IRQn);
+
+}
+
 /**
   * @brief GPIO Initialization Function
   * @param None
@@ -337,22 +375,18 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(VL53L1X_INT_GPIO_Port, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : LD2_Pin TOF_XSHUT_5_Pin TOF_XSHUT_0_Pin TOF_XSHUT_1_Pin 
-                           TOF_XSHUT_2_Pin */
-  GPIO_InitStruct.Pin = LD2_Pin|TOF_XSHUT_5_Pin|TOF_XSHUT_0_Pin|TOF_XSHUT_1_Pin 
-                          |TOF_XSHUT_2_Pin;
+  /*Configure GPIO pins : LD2_Pin */
+  GPIO_InitStruct.Pin = LD2_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-  /*Configure GPIO pins : TOF_XSHUT_4_Pin TOF_XSHUT_3_Pin */
-  GPIO_InitStruct.Pin = TOF_XSHUT_4_Pin|TOF_XSHUT_3_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  /*Configure GPIO pins : LIMIT_SW_L_Pin LIMIT_SW_R_Pin */
+  GPIO_InitStruct.Pin = LIMIT_SW_L_Pin|LIMIT_SW_R_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
-
 }
 
 /* USER CODE BEGIN 4 */
@@ -360,23 +394,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE END 4 */
 
 /* USER CODE BEGIN Header_chassis_task */
-/**
-  * @brief  Function implementing the taskChassis thread.
-  * @param  argument: Not used 
-  * @retval None
-  */
-/* USER CODE END Header_chassis_task */
-void chassis_task(void const * argument)
-{
-
-  /* USER CODE BEGIN 5 */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END 5 */ 
-}
 
 /* USER CODE BEGIN Header_tof_task */
 /**
@@ -395,6 +412,8 @@ void tof_task(void const * argument)
   }
   /* USER CODE END tof_task */
 }
+
+/* USER CODE BEGIN Header_comm_task */
 
 /**
   * @brief  Period elapsed callback in non blocking mode

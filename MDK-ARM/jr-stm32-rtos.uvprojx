@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define>USE_HAL_DRIVER,STM32F411xE</Define>
               <Undefine></Undefine>
-              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;./lib;./app</IncludePath>
+              <IncludePath>../Inc;../Drivers/STM32F4xx_HAL_Driver/Inc;../Drivers/STM32F4xx_HAL_Driver/Inc/Legacy;../Middlewares/Third_Party/FreeRTOS/Source/include;../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS;../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F;../Drivers/CMSIS/Device/ST/STM32F4xx/Include;../Drivers/CMSIS/Include;./lib;./app;./bsp;../Drivers/BSP/Components/vl53l1x;./driver;../Drivers/BSP/STM32F4xx-Nucleo;../Drivers/BSP/X-NUCLEO-53L1A1</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -431,6 +431,11 @@
               <FileName>stm32f4xx_hal_timebase_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>../Src/stm32f4xx_hal_timebase_tim.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_platform.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\vl53l1_platform.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -670,6 +675,121 @@
               <FileName>data_fifo.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\lib\data_fifo.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/UserBsp</GroupName>
+          <Files>
+            <File>
+              <FileName>bsp_uart.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\bsp\bsp_uart.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Interactive</GroupName>
+          <Files>
+            <File>
+              <FileName>info_interactive.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\info_interactive.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Application/Comm</GroupName>
+          <Files>
+            <File>
+              <FileName>jr_comm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\jr_comm.c</FilePath>
+            </File>
+            <File>
+              <FileName>communication.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\communication.c</FilePath>
+            </File>
+            <File>
+              <FileName>protocol.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\protocol.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/User</GroupName>
+          <Files>
+            <File>
+              <FileName>tof.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\driver\tof.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/BSP/VL53L1X</GroupName>
+          <Files>
+            <File>
+              <FileName>vl53l1_api.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_api.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_api_calibration.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_api_calibration.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_api_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_api_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_api_debug.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_api_debug.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_api_preset_modes.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_api_preset_modes.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_api_strings.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_api_strings.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_core_support.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_core_support.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_error_strings.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_error_strings.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_register_funcs.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_register_funcs.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_silicon_core.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_silicon_core.c</FilePath>
+            </File>
+            <File>
+              <FileName>vl53l1_wait.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_wait.c</FilePath>
             </File>
           </Files>
         </Group>

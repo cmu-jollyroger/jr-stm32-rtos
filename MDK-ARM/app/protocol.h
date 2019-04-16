@@ -30,6 +30,8 @@
 
 #include "stm32f4xx_hal.h"
 
+#define UP_REG_ID    0xA0  //up layer regional id
+#define DN_REG_ID    0xA5  //down layer regional id
 #define HEADER_LEN   sizeof(frame_header_t)
 #define CMD_LEN      2    //cmdid bytes
 #define CRC_LEN      2    //crc16 bytes
