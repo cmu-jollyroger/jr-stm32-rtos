@@ -7,6 +7,7 @@
 #include "string.h" // memset
 #include "comm_task.h"
 #include "jr_comm.h" // communication data structure declarations
+#include "info_interactive.h"
 
 /* pc receive data fifo and buffer */
 static osMutexId pc_rxdata_mutex;
@@ -58,13 +59,37 @@ void communicate_param_init(void)
   memset(&glb_chassis_states, 0, sizeof(chassis_states_t));
 }
 
+/**
+ * @brief Aggregate update for all information sent to host PC
+ */
+void update_uplink_data(void) {
+	taskENTER_CRITICAL();
+	
+	update_chassis_info();
+	
+	taskEXIT_CRITICAL();
+}
+
+uint32_t comm_time_last;
+int comm_time_ms;
+
 void uplink_task(void const *argu)
 {
+	uint32_t comm_wake_time = osKernelSysTick();
+	
 	while (1)
 	{
-		/* TODO: do uplink stuff */
-		HAL_UART_Transmit(&huart2, (uint8_t *)"hi\r\n", 4, 100);
-		HAL_Delay(1000);
+		comm_time_ms = HAL_GetTick() - comm_time_last;
+		comm_time_last = HAL_GetTick();
+		
+		update_uplink_data();
+		
+		data_packet_pack(CHASSIS_DATA_ID, (uint8_t *)&pc_send_mesg.chassis_information,
+		                 sizeof(chassis_info_t), UP_REG_ID);
+		
+		osSignalSet(taskCommHandle, PC_UART_TX_SIGNAL);
+		
+		osDelayUntil(&comm_wake_time, COMM_TASK_PERIOD);  // 50Hz
 	}
 }
 
@@ -88,7 +113,7 @@ void comm_task(void const *argu)
 	uplinkTaskHandle = osThreadCreate(osThread(taskUplink), NULL);
 	taskEXIT_CRITICAL();
 	
-	//HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	
   while (1)
   {
@@ -114,4 +139,19 @@ void comm_task(void const *argu)
     //osDelay(1000);
   }
   /* USER CODE END comm_task */
+}
+
+void data_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t sof)
+{
+  uint8_t tx_buf[PROTOCAL_FRAME_MAX_SIZE];
+  
+  uint16_t frame_length = HEADER_LEN + CMD_LEN + len + CRC_LEN;
+  
+  protocol_packet_pack(cmd_id, p_data, len, sof, tx_buf);
+  
+  /* use mutex operation */
+  if (sof == UP_REG_ID)
+    fifo_s_puts(&pc_txdata_fifo, tx_buf, frame_length);
+  else
+    return ;
 }

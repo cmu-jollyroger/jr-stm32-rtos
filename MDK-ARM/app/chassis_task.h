@@ -25,7 +25,11 @@
  *
  */
 
+#ifndef __CHASSIS_TASK_H__
+#define __CHASSIS_TASK_H__
+
 #include "jr_comm.h"
+#include "tof.h"
 
 /**@brief  Chassis modes */
 typedef enum
@@ -54,6 +58,11 @@ typedef struct
   int16_t         current[4];
   
   int16_t         position_ref;
+	
+	int16_t         range_tof[NUM_TOFS]; // tof readings in mm
+	
+	uint8_t         limit_sw_l; // limit switch left, 0->open, 1->closed
+	uint8_t         limit_sw_r;
 } chassis_t;
 
 void chassis_task(void const *argu);
@@ -66,3 +75,5 @@ static void chassis_stop_handler(void);
 static void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 
 extern chassis_t chassis;
+
+#endif /* __CHASSIS_TASK_H__ */

@@ -43,4 +43,7 @@ void uart_dma_full_signal(UART_HandleTypeDef *huart);
 
 void get_dma_memory_msg(DMA_Stream_TypeDef *dma_stream, uint8_t *mem_id, uint16_t *remain_cnt);
 
+/* Get sysinfo to send to host PC */
+void update_chassis_info(void);
+
 #endif

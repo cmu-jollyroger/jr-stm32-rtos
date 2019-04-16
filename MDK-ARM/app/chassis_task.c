@@ -13,13 +13,6 @@ void get_motor_feedback() {
 	
 }
 
-/**
- * @brief Get TOF sensor readings
- */
-void get_tof_feedback() {
-	
-}
-
 void chassis_task(void const *argu) {
 	chassis_time_ms = HAL_GetTick() - chassis_time_last;
 	chassis_time_last = HAL_GetTick();
@@ -28,4 +21,3 @@ void chassis_task(void const *argu) {
 		
 	}
 }
-

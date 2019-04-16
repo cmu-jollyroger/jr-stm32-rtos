@@ -87,7 +87,6 @@ void Error_Handler(void);
 #define LIMIT_SW_R_GPIO_Port GPIOB
 
 /* USER CODE BEGIN Private defines */
-#define NUM_TOFS (6)
 
 /* USER CODE END Private defines */
 

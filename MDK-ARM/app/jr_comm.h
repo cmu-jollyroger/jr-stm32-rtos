@@ -32,7 +32,7 @@
 #include "communication.h"
 
 /** @brief  Length of PC FIFO buffer */
-#define COMPUTER_FIFO_BUFLEN (500)
+#define COMPUTER_FIFO_BUFLEN (1000)
 
 
 /**

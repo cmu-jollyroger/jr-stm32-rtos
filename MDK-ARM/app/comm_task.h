@@ -31,6 +31,8 @@
 #include "stm32f4xx_hal.h"
 #include "data_fifo.h"
 
+#define COMM_TASK_PERIOD (20)
+
 #define PC_UART_TX_SIGNAL      ( 1 << 3 )
 #define PC_UART_IDLE_SIGNAL    ( 1 << 4 )
 #define PC_DMA_FULL_SIGNAL     ( 1 << 5 )
@@ -38,6 +40,8 @@
 typedef struct {
 	int16_t chassis_vel[4]; /**< Command velocity of chassis motors */
 } chassis_states_t;
+
+extern osThreadId taskCommHandle;
 
 /** @brief Unpack task of host PC commands */
 void comm_task(void const *argu);
@@ -47,5 +51,7 @@ void i2c_msg_send_task(void const *argu);
 
 /** @brief Initialization of communication submodule */
 void communicate_param_init(void);
+
+void data_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, uint8_t sof);
 
 #endif

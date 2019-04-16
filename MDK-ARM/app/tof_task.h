@@ -14,35 +14,21 @@
  *  You should have received a copy of the GNU General Public License
  *  along with this program. If not, see <http://www.gnu.org/licenses/>.
  ***************************************************************************/
-/** @file tof.h
+/** @file tof_task.h
  *  @version 1.0
  *  @date Apr 2019
  *
- *  @brief the tof ranger finder interface
+ *  @brief TOF range finder task
  *
- *  @copyright 2019 Haowen Shi. All rights reserved.
+ *  @copyright Haowen Shi, Carnegie Mellon University.
  *
  */
 
-#ifndef __TOF_H__
-#define __TOF_H__
+#ifndef __TOF_TASK_H__
+#define __TOF_TASK_H__
 
-#include "vl53l1_api.h"
-#include "X-NUCLEO-53L1A1.h"
+#include "tof.h"
 
-#define NUM_TOFS (6)
+void tof_task(void const * argu);
 
-/** @brief struct of all TOF sensors and their states */
-typedef struct {
-	VL53L1_Dev_t dev;
-	uint8_t valid;
-	GPIO_TypeDef *port;
-	uint16_t mask;
-} tof_sensor_t;
-
-extern tof_sensor_t tof_sensors[NUM_TOFS];
-
-void VL53L1_TOF_Config(void);
-void VL53L1_TOF_Init(void);
-
-#endif /*__TOF_H__*/
+#endif /* __TOF_TASK_H__ */

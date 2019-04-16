@@ -402,6 +402,11 @@
               <FileType>1</FileType>
               <FilePath>.\app\chassis_task.c</FilePath>
             </File>
+            <File>
+              <FileName>tof_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\tof_task.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

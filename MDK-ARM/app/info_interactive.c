@@ -30,8 +30,6 @@
 //#include "info_get_task.h"
 //#include "detect_task.h"
 #include "chassis_task.h"
-//#include "bsp_can.h"
-//#include "bsp_can.h"
 #include "bsp_uart.h"
 //#include "infantry_info.h"
 #include "protocol.h"
@@ -70,7 +68,7 @@ void uart_write_completed_signal(UART_HandleTypeDef *huart)
   */
 void write_uart_blocking(UART_HandleTypeDef *huart, uint8_t *p_data, uint16_t size)
 {
-  HAL_UART_Transmit(huart, p_data, size, 100);
+  HAL_UART_Transmit(huart, p_data, size, 1000);
 }
 
 /**
@@ -130,4 +128,25 @@ void get_dma_memory_msg(DMA_Stream_TypeDef *dma_stream, uint8_t *mem_id, uint16_
 {
   *mem_id     = dma_current_memory_target(dma_stream);
   *remain_cnt = dma_current_data_counter(dma_stream);
+}
+
+void update_chassis_info(void)
+{
+	pc_send_mesg.chassis_information.ctrl_mode = chassis.ctrl_mode;
+  pc_send_mesg.chassis_information.gyro_palstance = 0.f; /**< chassis palstance(degree/s) from gyroscope */
+  pc_send_mesg.chassis_information.gyro_angle = 0.f;     /**< chassis angle(degree) relative to ground from gyroscope */
+  pc_send_mesg.chassis_information.ecd_palstance = 0.f;  /**< chassis palstance(degree/s) from chassis motor encoder calculated */
+  pc_send_mesg.chassis_information.ecd_calc_angle = 0.f; /**< chassis angle(degree) relative to ground from chassis motor encoder calculated */
+  pc_send_mesg.chassis_information.x_spd = 0;            /**< TODO: use encoder driver */
+  pc_send_mesg.chassis_information.y_spd = 0;            /**< TODO: use encoder driver */
+  pc_send_mesg.chassis_information.x_position = 0;       /**< chassis x-axis position(mm) relative to the starting point */
+  pc_send_mesg.chassis_information.y_position = 0;       /**< chassis y-axis position(mm) relative to the starting point */
+	pc_send_mesg.chassis_information.tof_0 = chassis.range_tof[0];
+	pc_send_mesg.chassis_information.tof_1 = chassis.range_tof[1];
+	pc_send_mesg.chassis_information.tof_2 = chassis.range_tof[2];
+	pc_send_mesg.chassis_information.tof_3 = chassis.range_tof[3];
+	pc_send_mesg.chassis_information.tof_4 = chassis.range_tof[4];
+	pc_send_mesg.chassis_information.tof_5 = chassis.range_tof[5];
+	pc_send_mesg.chassis_information.sw_l = chassis.limit_sw_l;    /**< left limit switch */
+	pc_send_mesg.chassis_information.sw_r = chassis.limit_sw_r;    /**< right limit switch */
 }

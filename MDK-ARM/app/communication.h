@@ -29,8 +29,6 @@
 #ifndef __COMMUNICATE_H__
 #define __COMMUNICATE_H__
 
-#define COMPUTER_FIFO_BUFLEN (500)
-
 #include "stm32f4xx_hal.h"
 #include "data_fifo.h"
 #include "protocol.h"

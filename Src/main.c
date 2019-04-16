@@ -26,7 +26,7 @@
 #include "cmsis_os.h"
 #include "chassis_task.h"
 #include "comm_task.h"
-#include "tof.h"
+#include "tof_task.h"
 #include "sys_config.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -55,6 +55,7 @@ I2C_HandleTypeDef hi2c3;
 
 UART_HandleTypeDef huart2;
 DMA_HandleTypeDef hdma_usart2_rx;
+DMA_HandleTypeDef hdma_usart2_tx;
 
 osThreadId taskChassisHandle;
 osThreadId taskTOFHandle;
@@ -71,7 +72,6 @@ static void MX_DMA_Init(void);
 static void MX_USART2_UART_Init(void);
 static void MX_I2C1_Init(void);
 static void MX_I2C3_Init(void);
-void tof_task(void const * argument);
 
 /* USER CODE BEGIN PFP */
 
@@ -392,28 +392,6 @@ static void MX_GPIO_Init(void)
 /* USER CODE BEGIN 4 */
 
 /* USER CODE END 4 */
-
-/* USER CODE BEGIN Header_chassis_task */
-
-/* USER CODE BEGIN Header_tof_task */
-/**
-* @brief Function implementing the taskTOF thread.
-* @param argument: Not used
-* @retval None
-*/
-/* USER CODE END Header_tof_task */
-void tof_task(void const * argument)
-{
-  /* USER CODE BEGIN tof_task */
-  /* Infinite loop */
-  for(;;)
-  {
-    osDelay(1);
-  }
-  /* USER CODE END tof_task */
-}
-
-/* USER CODE BEGIN Header_comm_task */
 
 /**
   * @brief  Period elapsed callback in non blocking mode

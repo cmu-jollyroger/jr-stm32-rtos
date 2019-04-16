@@ -1,18 +1,7 @@
 #include "tof.h"
-
-#include "vl53l1_api.h"
-#include "X-NUCLEO-53L1A1.h"
 #include "main.h"
 
-/** @brief struct of all TOF sensors and their states */
-struct {
-	VL53L1_Dev_t dev;
-	uint8_t valid;
-	GPIO_TypeDef *port;
-	uint16_t mask;
-} sensors[NUM_TOFS];
-
-VL53L1_DEV Dev = &sensors[0].dev;
+tof_sensor_t tof_sensors[NUM_TOFS];
 
 /** @brief struct containing TOF XSHUT pin configurations */
 struct _gpio {
@@ -38,11 +27,11 @@ void VL53L1_TOF_Config() {
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 		HAL_GPIO_Init(xshut[i].port, &GPIO_InitStruct);
 		
-		sensors[i].port = xshut[i].port;
-		sensors[i].mask = xshut[i].mask;
-		sensors[i].valid = 0;
-		sensors[i].dev.I2cHandle = &hi2c1;
-		sensors[i].dev.I2cDevAddr = 0x29 << 1; // default address
+		tof_sensors[i].port = xshut[i].port;
+		tof_sensors[i].mask = xshut[i].mask;
+		tof_sensors[i].valid = 0;
+		tof_sensors[i].dev.I2cHandle = &hi2c1;
+		tof_sensors[i].dev.I2cDevAddr = 0x29 << 1; // default address
 	}
 	
 	printf("configured %d TOF sensors\r\n", NUM_TOFS);
@@ -51,6 +40,7 @@ void VL53L1_TOF_Config() {
 /** @brief TOF initialization */
 void VL53L1_TOF_Init() {
 	VL53L1_Error err;
+	VL53L1_DEV Dev = &tof_sensors[0].dev;
 	
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_RESET);
 	
@@ -63,7 +53,7 @@ void VL53L1_TOF_Init() {
 		HAL_GPIO_WritePin(xshut[i].port, xshut[i].mask, GPIO_PIN_SET);
 		HAL_Delay(10);
 		
-		Dev = &sensors[i].dev;
+		Dev = &tof_sensors[i].dev;
 		Dev->I2cDevAddr = 0x29 << 1; // default address before configuring
 		
 		err = VL53L1_WaitDeviceBooted(Dev);
@@ -134,7 +124,7 @@ void VL53L1_TOF_Init() {
 		printf("   - VL53L1X Module_Type: %02X\r\n", byteData);
 		VL53L1_RdWord(Dev, 0x010F, &wordData);
 		printf("   - VL53L1X: %02X\r\n", wordData);
-		sensors[i].valid = 1;
+		tof_sensors[i].valid = 1;
 	}
 	
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);

@@ -303,14 +303,10 @@ uint8_t* protocol_packet_pack(uint16_t cmd_id, uint8_t *p_data, uint16_t len, ui
   return tx_buf;
 }
 
+uint8_t  tx_buf[COMPUTER_FIFO_BUFLEN];
 
 uint32_t send_packed_fifo_data(fifo_s_t *pfifo, uint8_t sof)
 {
-#if (JUDGE_FIFO_BUFLEN > COMPUTER_FIFO_BUFLEN)
-  uint8_t  tx_buf[JUDGE_FIFO_BUFLEN];
-#else
-  uint8_t  tx_buf[COMPUTER_FIFO_BUFLEN];
-#endif
   
   uint32_t fifo_count = fifo_used_count(pfifo);
   
