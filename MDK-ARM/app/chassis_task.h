@@ -56,12 +56,12 @@ typedef struct
   int16_t         position_ref;
 } chassis_t;
 
-void chassis_task(void const * argument);
+void chassis_task_(void const * argument);
 
 void chassis_param_init(void);
 void power_limit_handler(void);
 
-static void chassis_stop_handler(void);
+//static void chassis_stop_handler(void);
 
 static void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 

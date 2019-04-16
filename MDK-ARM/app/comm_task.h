@@ -31,6 +31,25 @@
 #include "stm32f4xx_hal.h"
 #include "data_fifo.h"
 
+
+/* communication task period time (ms) */
+#define COMM_TASK_PERIOD 10
+
+#define JUDGE_UART_TX_SIGNAL   ( 1 << 0 )
+#define JUDGE_UART_IDLE_SIGNAL ( 1 << 1 )
+#define JUDGE_DMA_FULL_SIGNAL  ( 1 << 2 )
+
+#define PC_UART_TX_SIGNAL      ( 1 << 3 )
+#define PC_UART_IDLE_SIGNAL    ( 1 << 4 )
+#define PC_DMA_FULL_SIGNAL     ( 1 << 5 )
+
+//#define GIMBAL_MOTOR_MSG_SEND  ( 1 << 6 )
+#define CHASSIS_MOTOR_MSG_SEND ( 1 << 7 )
+
+//#define SHOT_TASK_EXE_SIGNAL   ( 1 << 8 )
+#define INFO_GET_EXE_SIGNAL    ( 1 << 9 )
+
+
 typedef struct {
 	int16_t chassis_vel[4]; /**< Command velocity of chassis motors */
 } chassis_states_t;

@@ -6,12 +6,12 @@ chassis_t chassis;
 
 uint32_t chassis_time_last;
 int chassis_time_ms;
-void chassis_task(void const *argu)
+void chassis_task_(void const *argu)
 {
   chassis_time_ms = HAL_GetTick() - chassis_time_last;
   chassis_time_last = HAL_GetTick();
 
-  get_chassis_info();
+//  get_chassis_info();
 //    get_chassis_mode();
 
   switch (chassis.ctrl_mode)
@@ -44,18 +44,18 @@ void chassis_task(void const *argu)
     }break;
   }
 
-  for (int i = 0; i < 4; i++)
-  {
-    chassis.current[i] = pid_calc(
-            &pid_spd[i],
-            chassis.wheel_spd_fdb[i],
-            chassis.wheel_spd_ref[i]
-    );
-    //chassis.current[i] = chassis.wheel_spd_ref[i]; // disable PID for testing
-  }
+//  for (int i = 0; i < 4; i++)
+//  {
+//    chassis.current[i] = pid_calc(
+//            &pid_spd[i],
+//            chassis.wheel_spd_fdb[i],
+//            chassis.wheel_spd_ref[i]
+//    );
+//    //chassis.current[i] = chassis.wheel_spd_ref[i]; // disable PID for testing
+//  }
 
-  memcpy(glb_cur.chassis_cur, chassis.current, sizeof(chassis.current));
-  osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
+//  memcpy(glb_cur.chassis_cur, chassis.current, sizeof(chassis.current));
+//  osSignalSet(can_msg_send_task_t, CHASSIS_MOTOR_MSG_SEND);
 
-  chassis_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
+//  chassis_stack_surplus = uxTaskGetStackHighWaterMark(NULL);
 }

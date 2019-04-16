@@ -7,10 +7,6 @@
 #include "string.h" // memset
 #include "comm_task.h"
 #include "jr_comm.h" // communication data structure declarations
-#include "../../Middlewares/Third_Party/FreeRTOS/Source/include/task.h"
-#include "../../Middlewares/Third_Party/FreeRTOS/Source/portable/RVDS/ARM_CM4F/portmacro.h"
-#include "../../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS/cmsis_os.h"
-#include "../lib/data_fifo.h"
 #include "info_interactive.h"
 
 UBaseType_t freq_info_surplus;
