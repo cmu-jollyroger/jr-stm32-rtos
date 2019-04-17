@@ -69,6 +69,7 @@ void Error_Handler(void);
 #define VL53L1X_INT_GPIO_Port GPIOA
 #define LD2_Pin GPIO_PIN_5
 #define LD2_GPIO_Port GPIOA
+
 #define TOF_XSHUT_0_Pin GPIO_PIN_10
 #define TOF_XSHUT_0_GPIO_Port GPIOC
 #define TOF_XSHUT_1_Pin GPIO_PIN_12
@@ -81,6 +82,7 @@ void Error_Handler(void);
 #define TOF_XSHUT_4_GPIO_Port GPIOB
 #define TOF_XSHUT_5_Pin GPIO_PIN_10
 #define TOF_XSHUT_5_GPIO_Port GPIOA
+
 #define LIMIT_SW_L_Pin GPIO_PIN_6
 #define LIMIT_SW_L_GPIO_Port GPIOB
 #define LIMIT_SW_R_Pin GPIO_PIN_7

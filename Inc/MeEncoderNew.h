@@ -104,7 +104,7 @@
 
 #define PULSE_PER_C 8
 
-extern I2C_HandleTypeDef hi2c1;
+extern I2C_HandleTypeDef hi2c3;
 
 /**
  * Class: MeEncoderNew
