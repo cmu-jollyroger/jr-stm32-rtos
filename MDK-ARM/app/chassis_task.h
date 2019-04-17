@@ -72,7 +72,7 @@ void power_limit_handler(void);
 
 static void chassis_stop_handler(void);
 
-static void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
+//static void mecanum_calc(float vx, float vy, float vw, int16_t speed[]);
 
 extern chassis_t chassis;
 
