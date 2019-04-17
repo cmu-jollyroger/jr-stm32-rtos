@@ -133,14 +133,14 @@ void get_dma_memory_msg(DMA_Stream_TypeDef *dma_stream, uint8_t *mem_id, uint16_
 void update_chassis_info(void)
 {
 	pc_send_mesg.chassis_information.ctrl_mode = chassis.ctrl_mode;
-  pc_send_mesg.chassis_information.gyro_palstance = 0.f; /**< chassis palstance(degree/s) from gyroscope */
-  pc_send_mesg.chassis_information.gyro_angle = 0.f;     /**< chassis angle(degree) relative to ground from gyroscope */
-  pc_send_mesg.chassis_information.ecd_palstance = 0.f;  /**< chassis palstance(degree/s) from chassis motor encoder calculated */
-  pc_send_mesg.chassis_information.ecd_calc_angle = 0.f; /**< chassis angle(degree) relative to ground from chassis motor encoder calculated */
-  pc_send_mesg.chassis_information.x_spd = 0;            /**< TODO: use encoder driver */
-  pc_send_mesg.chassis_information.y_spd = 0;            /**< TODO: use encoder driver */
-  pc_send_mesg.chassis_information.x_position = 0;       /**< chassis x-axis position(mm) relative to the starting point */
-  pc_send_mesg.chassis_information.y_position = 0;       /**< chassis y-axis position(mm) relative to the starting point */
+  pc_send_mesg.chassis_information.gyro_palstance = 1.f; /**< chassis palstance(degree/s) from gyroscope */
+  pc_send_mesg.chassis_information.gyro_angle = 2.f;     /**< chassis angle(degree) relative to ground from gyroscope */
+  pc_send_mesg.chassis_information.ecd_palstance = 3.f;  /**< chassis palstance(degree/s) from chassis motor encoder calculated */
+  pc_send_mesg.chassis_information.ecd_calc_angle = 4.f; /**< chassis angle(degree) relative to ground from chassis motor encoder calculated */
+  pc_send_mesg.chassis_information.x_spd = 5;            /**< TODO: use encoder driver */
+  pc_send_mesg.chassis_information.y_spd = 6;            /**< TODO: use encoder driver */
+  pc_send_mesg.chassis_information.x_position = 7;       /**< chassis x-axis position(mm) relative to the starting point */
+  pc_send_mesg.chassis_information.y_position = 8;       /**< chassis y-axis position(mm) relative to the starting point */
 	pc_send_mesg.chassis_information.tof_0 = chassis.range_tof[0];
 	pc_send_mesg.chassis_information.tof_1 = chassis.range_tof[1];
 	pc_send_mesg.chassis_information.tof_2 = chassis.range_tof[2];
