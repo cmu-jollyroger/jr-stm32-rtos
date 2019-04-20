@@ -1,5 +1,6 @@
 #include "tof.h"
 #include "main.h"
+#include "jr_status.h"
 
 tof_sensor_t tof_sensors[NUM_TOFS];
 
@@ -59,7 +60,7 @@ void VL53L1_TOF_Init() {
 		err = VL53L1_WaitDeviceBooted(Dev);
 		if (err != VL53L1_ERROR_NONE) {
 			printf("[error] VL53L1_WaitDeviceBooted(%d) failed\r\n", i);
-			continue;
+			goto on_error;
 		} else {
 			printf("[OK] VL53L1_WaitDeviceBooted(%d)\r\n", i);
 		}
@@ -68,7 +69,7 @@ void VL53L1_TOF_Init() {
 		Dev->I2cDevAddr = (0x29 + i + 1) << 1; //change address even in case of error to reduce cross-talk
 		if (err != VL53L1_ERROR_NONE) {
 			printf("[error] VL53L1_SetDeviceAddress(%d) failed\r\n", i);
-			continue;
+			goto on_error;
 		} else {
 			printf("[OK] VL53L1_SetDeviceAddress(%d)\r\n", i);
 		}
@@ -76,7 +77,7 @@ void VL53L1_TOF_Init() {
 		err = VL53L1_DataInit(Dev);
 		if (err != VL53L1_ERROR_NONE) {
 			printf("[error] VL53L1_DataInit(%d) failed\r\n", i);
-			continue;
+			goto on_error;
 		} else {
 			printf("[OK] VL53L1_DataInit(%d)\r\n", i);
 		}
@@ -84,7 +85,7 @@ void VL53L1_TOF_Init() {
 		err = VL53L1_StaticInit(Dev);
 		if (err != VL53L1_ERROR_NONE) {
 			printf("[error] VL53L1_StaticInit(%d) failed\r\n", i);
-			continue;
+			goto on_error;
 		} else {
 			printf("[OK] VL53L1_StaticInit(%d)\r\n", i);
 		}
@@ -92,7 +93,7 @@ void VL53L1_TOF_Init() {
 		err = VL53L1_SetDistanceMode(Dev, VL53L1_DISTANCEMODE_LONG);
 		if (err != VL53L1_ERROR_NONE) {
 			printf("[error] VL53L1_SetDistanceMode(%d) failed\r\n", i);
-			continue;
+			goto on_error;
 		} else {
 			printf("[OK] VL53L1_SetDistanceMode(%d)\r\n", i);
 		}
@@ -100,7 +101,7 @@ void VL53L1_TOF_Init() {
 		err = VL53L1_SetInterMeasurementPeriodMilliSeconds(Dev, 500);
 		if (err != VL53L1_ERROR_NONE) {
 			printf("[error] VL53L1_SetInterMeasurementPeriodMilliSeconds(%d) failed\r\n", i);
-			continue;
+			goto on_error;
 		} else {
 			printf("[OK] VL53L1_SetInterMeasurementPeriodMilliSeconds(%d)\r\n", i);
 		}
@@ -108,7 +109,7 @@ void VL53L1_TOF_Init() {
 		err = VL53L1_StartMeasurement(Dev);
 		if (err != VL53L1_ERROR_NONE) {
 			printf("[error] VL53L1_StartMeasurement(%d) failed : %d\r\n", i, err);
-			continue;
+			goto on_error;
 		} else {
 			printf("[OK] VL53L1_StartMeasurement(%d)\r\n", i);
 		}
@@ -125,6 +126,14 @@ void VL53L1_TOF_Init() {
 		VL53L1_RdWord(Dev, 0x010F, &wordData);
 		printf("   - VL53L1X: %02X\r\n", wordData);
 		tof_sensors[i].valid = 1;
+		
+		glb_status_tof[i] = 0;
+		continue;
+		
+		/* Error handling */
+on_error:
+		glb_status_tof[i] = -1;
+		continue;
 	}
 	
 	HAL_GPIO_WritePin(LD2_GPIO_Port, LD2_Pin, GPIO_PIN_SET);

@@ -86,7 +86,7 @@ void Error_Handler(void);
 #define LIMIT_SW_L_Pin GPIO_PIN_6
 #define LIMIT_SW_L_GPIO_Port GPIOB
 #define LIMIT_SW_R_Pin GPIO_PIN_7
-#define LIMIT_SW_R_GPIO_Port GPIOB
+#define LIMIT_SW_R_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 

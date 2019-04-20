@@ -122,14 +122,21 @@ int main(void)
   MX_DMA_Init();
   MX_USART2_UART_Init();
   MX_I2C1_Init();
+	//__HAL_RCC_I2C1_FORCE_RESET();
+	//HAL_Delay(2);
+	//__HAL_RCC_I2C1_RELEASE_RESET();
+	HAL_Delay(200);
+	
   MX_I2C3_Init();
+	
+	//XNUCLEO53L1A1_Init();
+	
+	/* Initialize MeEncoder Driver */
+	MeEncoderNew_Init();
 	
 	/* Initialize TOF sensors */
 	VL53L1_TOF_Config();
 	VL53L1_TOF_Init();
-	
-	/* Initialize MeEncoder Driver */
-	MeEncoderNew_Init();
   
 	/* USER CODE BEGIN 2 */
 	communicate_param_init();
@@ -244,7 +251,7 @@ static void MX_I2C1_Init(void)
 
   /* USER CODE END I2C1_Init 1 */
   hi2c1.Instance = I2C1;
-  hi2c1.Init.ClockSpeed = 100000;
+  hi2c1.Init.ClockSpeed = 100000; //100000;
   hi2c1.Init.DutyCycle = I2C_DUTYCYCLE_2;
   hi2c1.Init.OwnAddress1 = 0;
   hi2c1.Init.AddressingMode = I2C_ADDRESSINGMODE_7BIT;
@@ -386,10 +393,15 @@ static void MX_GPIO_Init(void)
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
   /*Configure GPIO pins : LIMIT_SW_L_Pin LIMIT_SW_R_Pin */
-  GPIO_InitStruct.Pin = LIMIT_SW_L_Pin|LIMIT_SW_R_Pin;
+  GPIO_InitStruct.Pin = LIMIT_SW_R_Pin;
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+  HAL_GPIO_Init(LIMIT_SW_R_GPIO_Port, &GPIO_InitStruct);
+	
+	GPIO_InitStruct.Pin = LIMIT_SW_L_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  HAL_GPIO_Init(LIMIT_SW_L_GPIO_Port, &GPIO_InitStruct);
 }
 
 /* USER CODE BEGIN 4 */

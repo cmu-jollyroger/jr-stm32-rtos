@@ -442,6 +442,11 @@
               <FileType>1</FileType>
               <FilePath>..\Src\vl53l1_platform.c</FilePath>
             </File>
+            <File>
+              <FileName>jr_status.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\app\jr_status.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -802,6 +807,9 @@
               <FilePath>..\Drivers\BSP\Components\vl53l1x\vl53l1_wait.c</FilePath>
             </File>
           </Files>
+        </Group>
+        <Group>
+          <GroupName>Drivers/BSP/X-NUCLEO-53L1A1</GroupName>
         </Group>
         <Group>
           <GroupName>::CMSIS</GroupName>
