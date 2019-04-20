@@ -39,7 +39,7 @@ void tof_task(void const * argu)
   /* Infinite loop */
   while (1) {
 		update_limit_sw();
-		//continue;
+		continue;
 		for (ToFSensor = 0; ToFSensor < NUM_TOFS; ToFSensor++) {
 			if (glb_status_tof[ToFSensor] != 0) {
 				//printf("skipping tof %d\r\n", ToFSensor);

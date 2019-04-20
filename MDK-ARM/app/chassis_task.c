@@ -29,7 +29,7 @@
 /** @brief The deceleration ratio of chassis motor */
 #define CHASSIS_DECELE_RATIO (1.0f)
 /* single 3508 motor maximum speed, unit is rpm */
-#define MAX_WHEEL_RPM (40)   //44rpm = 350mm/s
+#define MAX_WHEEL_RPM (200)   //44rpm = 350mm/s
 /* chassis maximum translation speed, unit is mm/s */
 #define MAX_CHASSIS_VX_SPEED (330)  //41.5rpm
 #define MAX_CHASSIS_VY_SPEED (330)
@@ -49,9 +49,9 @@ else if((val) >= (max))\
 } while(0)\
 
 /* arrangement of motors */
-#define MOTOR_FR (0)
-#define MOTOR_FL (1)
-#define MOTOR_BL (2)
+#define MOTOR_FR (2)
+#define MOTOR_FL (0)
+#define MOTOR_BL (1)
 #define MOTOR_BR (3)
 
 /** @brief Mecanum calculation interface */
@@ -92,7 +92,7 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[])
     rotate_ratio_br = ((WHEEL_BASE + WHEEL_TRACK) / 2.0f \
                         + rotate_x_offset + rotate_y_offset) / RADIAN_COEF;
 
-    wheel_rpm_ratio = 60.0f / (WHEEL_PERIMETER * CHASSIS_DECELE_RATIO);
+    wheel_rpm_ratio = 60.0f / (WHEEL_PERIMETER * (float) CHASSIS_DECELE_RATIO);
     
     VAL_LIMIT(vx, -MAX_CHASSIS_VX_SPEED, MAX_CHASSIS_VX_SPEED);  //mm/s
     VAL_LIMIT(vy, -MAX_CHASSIS_VY_SPEED, MAX_CHASSIS_VY_SPEED);  //mm/s
