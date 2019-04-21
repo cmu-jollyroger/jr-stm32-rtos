@@ -31,7 +31,7 @@
 #include "stm32f4xx_hal.h"
 #include "data_fifo.h"
 
-#define COMM_TASK_PERIOD (20)
+#define COMM_TASK_PERIOD (100) // 10Hz communication
 
 #define PC_UART_TX_SIGNAL      ( 1 << 3 )
 #define PC_UART_IDLE_SIGNAL    ( 1 << 4 )

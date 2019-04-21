@@ -161,15 +161,15 @@ int main(void)
 
   /* Create the thread(s) */
   /* definition and creation of taskChassis */
-  osThreadDef(taskChassis, chassis_task, osPriorityNormal, 0, 128);
+  osThreadDef(taskChassis, chassis_task, osPriorityHigh, 0, 128);
   taskChassisHandle = osThreadCreate(osThread(taskChassis), NULL);
 
   /* definition and creation of taskTOF */
-  osThreadDef(taskTOF, tof_task, osPriorityNormal, 0, 128);
+  osThreadDef(taskTOF, tof_task, osPriorityHigh, 0, 128);
   taskTOFHandle = osThreadCreate(osThread(taskTOF), NULL);
 
   /* definition and creation of taskComm */
-  osThreadDef(taskComm, comm_task, osPriorityNormal, 0, 128);
+  osThreadDef(taskComm, comm_task, osPriorityHigh, 0, 128);
   taskCommHandle = osThreadCreate(osThread(taskComm), NULL);
 
   /* USER CODE BEGIN RTOS_THREADS */

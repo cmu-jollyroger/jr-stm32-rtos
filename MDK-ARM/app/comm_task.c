@@ -89,7 +89,7 @@ void uplink_task(void const *argu)
 		
 		osSignalSet(taskCommHandle, PC_UART_TX_SIGNAL);
 		
-		osDelayUntil(&comm_wake_time, COMM_TASK_PERIOD);  // 50Hz
+		osDelayUntil(&comm_wake_time, COMM_TASK_PERIOD);  // 5Hz
 	}
 }
 
@@ -109,11 +109,9 @@ void comm_task(void const *argu)
 	/* Setup uplink thread */
 	computer_uart_init();
 	
-	osThreadDef(taskUplink, uplink_task, osPriorityNormal, 0, 256);
+	osThreadDef(taskUplink, uplink_task, osPriorityHigh, 0, 256);
 	uplinkTaskHandle = osThreadCreate(osThread(taskUplink), NULL);
 	taskEXIT_CRITICAL();
-	
-	HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	
   while (1)
   {
@@ -127,16 +125,14 @@ void comm_task(void const *argu)
 				unpack_fifo_data(&pc_unpack_obj, UP_REG_ID);
 				
 				// blink LED2 as life indicator
-				HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
+				//HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 			}
 			
 			if (event.value.signals & PC_UART_TX_SIGNAL) {
+				HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 				send_packed_fifo_data(&pc_txdata_fifo, UP_REG_ID);
 			}
 		}
-		
-		//HAL_UART_Transmit(&huart2, (uint8_t *)"hello\r\n", 7, 100);
-    //osDelay(1000);
   }
   /* USER CODE END comm_task */
 }

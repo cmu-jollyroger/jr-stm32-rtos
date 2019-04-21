@@ -68,6 +68,8 @@ typedef struct
 void chassis_task(void const *argu);
 
 void chassis_param_init(void);
+void chassis_setparam_callback(void);
+
 void power_limit_handler(void);
 
 static void chassis_stop_handler(void);

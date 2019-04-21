@@ -74,22 +74,23 @@ void pc_data_handler(uint8_t *p_frame)
 			// command to chassis
       memcpy(&pc_recv_mesg.chassis_control_data, data_addr, data_length);
       chassis.ctrl_mode = (chassis_mode_e)pc_recv_mesg.chassis_control_data.ctrl_mode;
-      
+			break;
     }
-    break;
     
     case ERROR_LEVEL_ID:
     {
       memcpy(&pc_recv_mesg.global_error_level, data_addr, data_length);
-      
       pc_state = pc_recv_mesg.global_error_level.err_level;
-
+			break;
     }
-    break;
     
     case INFANTRY_STRUCT_ID:
-      memcpy(&pc_recv_mesg.structure_data, data_addr, data_length);
-    break;
+		{
+			// chassis configuration
+		  memcpy(&pc_recv_mesg.structure_data, data_addr, data_length);
+			chassis_setparam_callback();
+			break;
+		}
 		
   }
   

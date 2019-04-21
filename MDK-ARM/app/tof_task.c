@@ -20,11 +20,13 @@ void update_limit_sw(void)
 		chassis.limit_sw_l = 0;
   } else {
 		chassis.limit_sw_l = 1;
+		//HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	}
 	if (HAL_GPIO_ReadPin(LIMIT_SW_R_GPIO_Port, LIMIT_SW_R_Pin) == GPIO_PIN_SET) {
 		chassis.limit_sw_r = 0;
 	} else {
 		chassis.limit_sw_r = 1;
+		//HAL_GPIO_TogglePin(LD2_GPIO_Port, LD2_Pin);
 	}
 }
 
@@ -36,8 +38,12 @@ void tof_task(void const * argu)
 	static VL53L1_RangingMeasurementData_t RangingData;
 	VL53L1_DEV Dev = &tof_sensors[0].dev;
 	
+	uint32_t tof_wake_time = osKernelSysTick();
+	
   /* Infinite loop */
   while (1) {
+		osDelayUntil(&tof_wake_time, 50);  // 5Hz
+		
 		update_limit_sw();
 		continue;
 		for (ToFSensor = 0; ToFSensor < NUM_TOFS; ToFSensor++) {

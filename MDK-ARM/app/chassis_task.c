@@ -136,9 +136,42 @@ void get_motor_feedback() {
 	
 }
 
+void chassis_setparam_callback(void) {
+	float p = (pc_recv_mesg.structure_data.pid_vel_p);
+	float i = (pc_recv_mesg.structure_data.pid_vel_i);
+	float d = (pc_recv_mesg.structure_data.pid_vel_d);
+	for (int ii = 0; ii < 4; ii++) {
+		setSpeedPID(p, i, d, ii);
+		HAL_Delay(100);
+		//setSpeedPID(p, i, d, ii);
+		//HAL_Delay(100);
+	}
+	
+	p = (pc_recv_mesg.structure_data.pid_pos_p);
+	i = (pc_recv_mesg.structure_data.pid_pos_i);
+	d = (pc_recv_mesg.structure_data.pid_pos_d);
+	for (int ii = 0; ii < 4; ii++) {
+		setPosPID(p, i, d, ii);
+		HAL_Delay(100);
+		//setPosPID(p, i, d, ii);
+		//HAL_Delay(100);
+	}
+	
+	// TODO: sometimes this is unreliable due to I2C issues, add
+	// success check here.
+	
+	//getSpeedPID(&p, &i, &d, 0);
+	//getSpeedPID(&p, &i, &d, 1);
+	//getSpeedPID(&p, &i, &d, 2);
+	//getSpeedPID(&p, &i, &d, 3);
+	
+}
+
 void chassis_task(void const *argu) {
 	chassis_time_ms = HAL_GetTick() - chassis_time_last;
 	chassis_time_last = HAL_GetTick();
+	
+	uint32_t chassis_wake_time = osKernelSysTick();
 	
 	while (1) {
 		chassis_ctrl_t *chassis_ctrl = (chassis_ctrl_t*)&pc_recv_mesg;
@@ -149,9 +182,11 @@ void chassis_task(void const *argu) {
 		
 		mecanum_calc(vx, vy, vw, speed);
 		
-		runSpeed((float)speed[0], 1, 0);
-		runSpeed((float)speed[1], 1, 1);
-		runSpeed((float)speed[2], 1, 2);
-		runSpeed((float)speed[3], 1, 3);
+		runSpeed((float)-speed[0], 1, 0);
+		runSpeed((float)-speed[1], 1, 1);
+		runSpeed((float)-speed[2], 1, 2);
+		runSpeed((float)-speed[3], 1, 3);
+		
+		osDelayUntil(&chassis_wake_time, 100);  // 10Hz
 	}
 }
