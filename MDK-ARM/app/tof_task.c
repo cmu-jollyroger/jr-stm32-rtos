@@ -45,7 +45,7 @@ void tof_task(void const * argu)
 		osDelayUntil(&tof_wake_time, 50);  // 5Hz
 		
 		update_limit_sw();
-		continue;
+		//continue;
 		for (ToFSensor = 0; ToFSensor < NUM_TOFS; ToFSensor++) {
 			if (glb_status_tof[ToFSensor] != 0) {
 				//printf("skipping tof %d\r\n", ToFSensor);
@@ -53,7 +53,9 @@ void tof_task(void const * argu)
 			}
 			Dev = &tof_sensors[ToFSensor].dev;
 			
-			status = VL53L1_StartMeasurement(Dev);
+			//taskENTER_CRITICAL();
+			
+			//status = VL53L1_StartMeasurement(Dev);
 		  status = VL53L1_WaitMeasurementDataReady(Dev);
 			if(!status)
 			{
@@ -65,7 +67,11 @@ void tof_task(void const * argu)
 				}
 				status = VL53L1_ClearInterruptAndStartMeasurement(Dev);
 			}
+			
+			//taskEXIT_CRITICAL();
 		}
+		
+		osThreadYield();
 		
 	}
   /* USER CODE END tof_task */

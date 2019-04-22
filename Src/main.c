@@ -165,7 +165,7 @@ int main(void)
   taskChassisHandle = osThreadCreate(osThread(taskChassis), NULL);
 
   /* definition and creation of taskTOF */
-  osThreadDef(taskTOF, tof_task, osPriorityHigh, 0, 128);
+  osThreadDef(taskTOF, tof_task, osPriorityHigh, 0, 256);
   taskTOFHandle = osThreadCreate(osThread(taskTOF), NULL);
 
   /* definition and creation of taskComm */
