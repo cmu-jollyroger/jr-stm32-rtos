@@ -45,10 +45,14 @@ void tof_task(void const * argu)
 	static VL53L1_RangingMeasurementData_t RangingData;
 	VL53L1_DEV Dev = &tof_sensors[0].dev;
 	
+	taskENTER_CRITICAL();
+	
 	uint32_t tof_wake_time = osKernelSysTick();
 	
   SimpleKalmanFilterInit();
 	srand(osKernelSysTick());
+	
+	taskEXIT_CRITICAL();
 	
 	for (ToFSensor = 0; ToFSensor < NUM_TOFS; ToFSensor++) {
 		tof_prev_readings[ToFSensor] = -1;
@@ -77,7 +81,8 @@ void tof_task(void const * argu)
 				status = VL53L1_GetRangingMeasurementData(Dev, &RangingData);
 				if(status==0){
           float real_value = RangingData.RangeMilliMeter;
-          float measured_value = real_value + (rand() - (float) RAND_MAX / 2.f) / (float)RAND_MAX;
+					float rand_num = (rand() - (float) RAND_MAX / 2.f) / (float)RAND_MAX;
+          float measured_value = real_value + rand_num;
           float estimated_value = updateEstimate(measured_value, ToFSensor);
           chassis.range_tof[ToFSensor] = estimated_value;
 //					chassis.range_tof[ToFSensor] = RangingData.RangeMilliMeter;
@@ -89,29 +94,33 @@ void tof_task(void const * argu)
 						tof_dup_count[ToFSensor] = 0;
 					}
 					tof_prev_readings[ToFSensor] = RangingData.RangeMilliMeter;
-					
-					if (tof_dup_count[ToFSensor] > TOF_DUP_MAX_BEFORE_RESET) {
-						/* Reset if TOF outputs same data for a long time */
-						taskENTER_CRITICAL();
-						VL53L1_TOF_Init();
-						taskEXIT_CRITICAL();
-					}
 
 					//printf("%d,%d,%d,%d,%.2f,%.2f\r\n", ToFSensor, ToFSensor,RangingData.RangeStatus,RangingData.RangeMilliMeter,
 					//				(RangingData.SignalRateRtnMegaCps/65536.0),RangingData.AmbientRateRtnMegaCps/65336.0);
 				} else {
 					/* Reset if one TOF fails */
-					taskENTER_CRITICAL();
-					VL53L1_TOF_Init();
-					taskEXIT_CRITICAL();
+					goto reset_tof;
 				}
 				status = VL53L1_ClearInterruptAndStartMeasurement(Dev);
+			} else {
+				tof_dup_count[ToFSensor] ++;
+			}
+			
+			if (tof_dup_count[ToFSensor] > TOF_DUP_MAX_BEFORE_RESET) {
+				/* Reset if TOF outputs same data for a long time */
+				goto reset_tof;
 			}
 			
 			//taskEXIT_CRITICAL();
 		}
 		
 		osThreadYield();
+		
+		continue;
+		reset_tof:
+		taskENTER_CRITICAL();
+		VL53L1_TOF_Init();
+		taskEXIT_CRITICAL();
 		
 	}
   /* USER CODE END tof_task */
