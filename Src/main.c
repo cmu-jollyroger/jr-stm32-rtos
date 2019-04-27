@@ -28,6 +28,7 @@
 #include "comm_task.h"
 #include "tof_task.h"
 #include "sys_config.h"
+#include "buzzer.h"
 #include "MeEncoderNew.h"
 
 /* Private includes ----------------------------------------------------------*/
@@ -175,6 +176,8 @@ int main(void)
   /* USER CODE BEGIN RTOS_THREADS */
   /* add threads, ... */
   /* USER CODE END RTOS_THREADS */
+	
+	buzz_n_times_with_delay(2, 100);
 
   /* Start scheduler */
   osKernelStart();
@@ -402,6 +405,13 @@ static void MX_GPIO_Init(void)
   GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
   GPIO_InitStruct.Pull = GPIO_PULLUP;
   HAL_GPIO_Init(LIMIT_SW_L_GPIO_Port, &GPIO_InitStruct);
+	
+	/* Configure GPIO pins : BUZZER */
+	GPIO_InitStruct.Pin = BUZZER_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(BUZZER_GPIO_Port, &GPIO_InitStruct);
 }
 
 /* USER CODE BEGIN 4 */

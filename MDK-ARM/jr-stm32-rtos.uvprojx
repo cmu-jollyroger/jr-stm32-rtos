@@ -746,6 +746,11 @@
               <FileType>1</FileType>
               <FilePath>..\Drivers\Locomotion\MeEncoderNew.c</FilePath>
             </File>
+            <File>
+              <FileName>buzzer.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\driver\buzzer.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

@@ -87,6 +87,8 @@ void Error_Handler(void);
 #define LIMIT_SW_L_GPIO_Port GPIOB
 #define LIMIT_SW_R_Pin GPIO_PIN_7
 #define LIMIT_SW_R_GPIO_Port GPIOC
+#define BUZZER_Pin GPIO_PIN_6
+#define BUZZER_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 
