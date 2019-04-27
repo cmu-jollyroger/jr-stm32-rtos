@@ -39,7 +39,9 @@ void tof_task(void const * argu)
 	VL53L1_DEV Dev = &tof_sensors[0].dev;
 	
 	uint32_t tof_wake_time = osKernelSysTick();
-	
+
+  SimpleKalmanFilterInit();
+
   /* Infinite loop */
   while (1) {
 		osDelayUntil(&tof_wake_time, 50);  // 5Hz
@@ -60,8 +62,12 @@ void tof_task(void const * argu)
 			if(!status)
 			{
 				status = VL53L1_GetRangingMeasurementData(Dev, &RangingData);
-				if(status==0){
-					chassis.range_tof[ToFSensor] = RangingData.RangeMilliMeter;
+				if(status==0) {
+          float real_value = RangingData.RangeMilliMeter;
+          float measured_value = real_value + random(-100,100)/100.0;
+          float estimated_value = updateEstimate(measured_value, ToFSensor);
+          chassis.range_tof[ToFSensor] = estimated_value;
+//					chassis.range_tof[ToFSensor] = RangingData.RangeMilliMeter;
 					//printf("%d,%d,%d,%d,%.2f,%.2f\r\n", ToFSensor, ToFSensor,RangingData.RangeStatus,RangingData.RangeMilliMeter,
 					//				(RangingData.SignalRateRtnMegaCps/65536.0),RangingData.AmbientRateRtnMegaCps/65336.0);
 				}
