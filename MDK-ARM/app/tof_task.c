@@ -12,6 +12,10 @@
 */
 /* USER CODE END Header_tof_task */
 
+/* Detect when TOF's are not responding and reset them */
+int16_t tof_prev_readings[NUM_TOFS];
+int16_t tof_dup_count[NUM_TOFS];
+
 void update_limit_sw(void)
 {
 	
@@ -40,6 +44,11 @@ void tof_task(void const * argu)
 	
 	uint32_t tof_wake_time = osKernelSysTick();
 	
+	for (ToFSensor = 0; ToFSensor < NUM_TOFS; ToFSensor++) {
+		tof_prev_readings[ToFSensor] = -1;
+		tof_dup_count[ToFSensor] = 0;
+	}
+	
   /* Infinite loop */
   while (1) {
 		osDelayUntil(&tof_wake_time, 50);  // 5Hz
@@ -62,8 +71,29 @@ void tof_task(void const * argu)
 				status = VL53L1_GetRangingMeasurementData(Dev, &RangingData);
 				if(status==0){
 					chassis.range_tof[ToFSensor] = RangingData.RangeMilliMeter;
+					
+					/* Test if TOF has the same value for a period of time */
+					if (tof_prev_readings[ToFSensor] == RangingData.RangeMilliMeter) {
+						tof_dup_count[ToFSensor] ++;
+					} else {
+						tof_dup_count[ToFSensor] = 0;
+					}
+					tof_prev_readings[ToFSensor] = RangingData.RangeMilliMeter;
+					
+					if (tof_dup_count[ToFSensor] > TOF_DUP_MAX_BEFORE_RESET) {
+						/* Reset if TOF outputs same data for a long time */
+						taskENTER_CRITICAL();
+						VL53L1_TOF_Init();
+						taskEXIT_CRITICAL();
+					}
+					
 					//printf("%d,%d,%d,%d,%.2f,%.2f\r\n", ToFSensor, ToFSensor,RangingData.RangeStatus,RangingData.RangeMilliMeter,
 					//				(RangingData.SignalRateRtnMegaCps/65536.0),RangingData.AmbientRateRtnMegaCps/65336.0);
+				} else {
+					/* Reset if one TOF fails */
+					taskENTER_CRITICAL();
+					VL53L1_TOF_Init();
+					taskEXIT_CRITICAL();
 				}
 				status = VL53L1_ClearInterruptAndStartMeasurement(Dev);
 			}
