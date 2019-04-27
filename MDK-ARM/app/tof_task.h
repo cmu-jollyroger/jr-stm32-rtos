@@ -29,6 +29,8 @@
 
 #include "tof.h"
 
+#define TOF_DUP_MAX_BEFORE_RESET (10)
+
 void tof_task(void const * argu);
 
 #endif /* __TOF_TASK_H__ */
