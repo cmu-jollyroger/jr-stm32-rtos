@@ -1,8 +1,11 @@
+#include <math.h>
+#include <stdlib.h>
 #include "tof_task.h"
 #include "chassis_task.h"
 #include "cmsis_os.h"
 #include "main.h"
 #include "jr_status.h"
+#include "simpleKalmanFilter.h"
 
 /* USER CODE BEGIN Header_tof_task */
 /**
@@ -43,7 +46,10 @@ void tof_task(void const * argu)
 	VL53L1_DEV Dev = &tof_sensors[0].dev;
 	
 	uint32_t tof_wake_time = osKernelSysTick();
+	
   SimpleKalmanFilterInit();
+	srand(osKernelSysTick());
+	
 	for (ToFSensor = 0; ToFSensor < NUM_TOFS; ToFSensor++) {
 		tof_prev_readings[ToFSensor] = -1;
 		tof_dup_count[ToFSensor] = 0;
@@ -71,7 +77,7 @@ void tof_task(void const * argu)
 				status = VL53L1_GetRangingMeasurementData(Dev, &RangingData);
 				if(status==0){
           float real_value = RangingData.RangeMilliMeter;
-          float measured_value = real_value + random(-100,100)/100.0;
+          float measured_value = real_value + (rand() - (float) RAND_MAX / 2.f) / (float)RAND_MAX;
           float estimated_value = updateEstimate(measured_value, ToFSensor);
           chassis.range_tof[ToFSensor] = estimated_value;
 //					chassis.range_tof[ToFSensor] = RangingData.RangeMilliMeter;

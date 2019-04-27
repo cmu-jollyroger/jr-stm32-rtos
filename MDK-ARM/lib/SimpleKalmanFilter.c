@@ -4,6 +4,7 @@
  * Released under MIT License - see LICENSE file for details.
  */
 #include <math.h>
+#include "simpleKalmanFilter.h"
 
 #define NumOfTOF 6
 #define Init_Mea_E 1
@@ -26,6 +27,8 @@ void SimpleKalmanFilterInit() {
   SimpleKalmanFilter(Init_Mea_E, Init_Est_E, Init_Q, 1);
   SimpleKalmanFilter(Init_Mea_E, Init_Est_E, Init_Q, 2);
   SimpleKalmanFilter(Init_Mea_E, Init_Est_E, Init_Q, 3);
+	SimpleKalmanFilter(Init_Mea_E, Init_Est_E, Init_Q, 4);
+  SimpleKalmanFilter(Init_Mea_E, Init_Est_E, Init_Q, 5);
 }
 void SimpleKalmanFilter(float mea_e, float est_e, float q, int idx) {
   TOFKalmanFilters[idx]._err_measure = mea_e;

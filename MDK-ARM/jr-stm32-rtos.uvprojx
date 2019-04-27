@@ -686,6 +686,11 @@
               <FileType>1</FileType>
               <FilePath>.\lib\data_fifo.c</FilePath>
             </File>
+            <File>
+              <FileName>SimpleKalmanFilter.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\lib\SimpleKalmanFilter.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

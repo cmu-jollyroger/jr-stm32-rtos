@@ -7,7 +7,7 @@
 #ifndef SimpleKalmanFilter_h
 #define SimpleKalmanFilter_h
 
-void SimpleKalmanFilterInit();
+void SimpleKalmanFilterInit(void);
 void SimpleKalmanFilter(float mea_e, float est_e, float q, int idx);
 float updateEstimate(float mea, int idx);
 void setMeasurementError(float mea_e, int idx);
