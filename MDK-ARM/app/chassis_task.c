@@ -218,9 +218,8 @@ void chassis_task(void const *argu) {
 		int16_t vy = chassis_ctrl->y_spd;
 		float vw = chassis_ctrl->w_info.w_spd;
 		
-		chassis.enc_exec_done = 0;
-		
 		if (move_cmd != SPD_CTRL) {
+			chassis.enc_exec_done = 0;
 			if (move_cmd == ENC_CTRL_X) {
 				chassis_enc_move_mm_x(vx);
 			} else if (move_cmd == ENC_CTRL_Y) {
@@ -230,7 +229,7 @@ void chassis_task(void const *argu) {
 			}
 			chassis_ctrl->move_cmd = SPD_CTRL;
 			chassis.enc_exec_done = 1;
-		}
+		} 
 		
 //		int16_t speed[4];
 //		
