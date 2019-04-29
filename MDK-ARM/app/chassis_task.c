@@ -1,5 +1,6 @@
 #include "chassis_task.h"
 #include "MeEncoderNew.h"
+#include "buzzer.h"
 
 /**
  * @file mecanum_ctrl.hpp
@@ -25,6 +26,11 @@
 #define WHEEL_TRACK (500)
 /** @brief Wheel base distance (mm) */
 #define WHEEL_BASE (550)
+
+#define MOT_DEG_PER_ROT_DEG (6.2f)
+#define MOT_DEG_PER_DIS_MM (1.116f)
+#define MOT_TRA_SPD (30)
+#define MOT_ROT_SPD (50)
 
 /** @brief The deceleration ratio of chassis motor */
 #define CHASSIS_DECELE_RATIO (1.0f)
@@ -122,6 +128,35 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[])
     memcpy(speed, wheel_rpm, 4 * sizeof(int16_t));
 }
 
+void chassis_enc_turn_deg(int16_t degrees) {
+	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 0);
+	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 1);
+	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 2);
+	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 3);
+	while (!isTarPosReached(0) || !isTarPosReached(3)) {
+		continue;
+	}
+}
+
+void chassis_enc_move_mm_y(int16_t dist_mm) {
+	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 0);
+	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 1);
+	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 2);
+	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 3);
+	while (!isTarPosReached(0) || !isTarPosReached(3)) {
+		continue;
+	}
+}
+
+void chassis_enc_move_mm_x(int16_t dist_mm) {
+	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 0);
+	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 1);
+	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 2);
+	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 3);
+	while (!isTarPosReached(0) || !isTarPosReached(3)) {
+		continue;
+	}
+}
 
 /* chassis task global parameter */
 chassis_t chassis;
@@ -164,6 +199,8 @@ void chassis_setparam_callback(void) {
 	//getSpeedPID(&p, &i, &d, 1);
 	//getSpeedPID(&p, &i, &d, 2);
 	//getSpeedPID(&p, &i, &d, 3);
+	
+	buzz_n_times_with_delay(4, 50);
 	
 }
 

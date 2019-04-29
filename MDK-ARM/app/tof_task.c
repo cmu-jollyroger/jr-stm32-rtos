@@ -61,7 +61,7 @@ void tof_task(void const * argu)
 
   /* Infinite loop */
   while (1) {
-		osDelayUntil(&tof_wake_time, 50);  // 5Hz
+		osDelayUntil(&tof_wake_time, 10);  // 100Hz (less than this)
 		
 		update_limit_sw();
 		//continue;

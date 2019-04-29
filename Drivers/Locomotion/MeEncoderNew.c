@@ -842,13 +842,39 @@ void MeEncoderNew_Init() {
 	MeEncoderNewAddrSlot(0x0A, SLOT1, 2);
 	MeEncoderNewAddrSlot(0x0A, SLOT2, 3);
 	
+	int ticks_per_rev = 430;
+	
 	reset(0);
 	HAL_Delay(100); // must have a delay to prevent BUS_BUSY, bug from MakeBlock
+	setPulse(ticks_per_rev, 0);
+	HAL_Delay(100);
+	setRatio(1.f, 0);
+	HAL_Delay(100);
+	
 	reset(1);
 	HAL_Delay(100); // must have a delay to prevent BUS_BUSY, bug from MakeBlock
+	setPulse(ticks_per_rev, 1);
+	HAL_Delay(100);
+	setRatio(1.f, 1);
+	HAL_Delay(100);
+	
 	reset(2);
 	HAL_Delay(100); // must have a delay to prevent BUS_BUSY, bug from MakeBlock
+	setPulse(ticks_per_rev, 2);
+	HAL_Delay(100);
+	setRatio(1.f, 2);
+	HAL_Delay(100);
+	
 	reset(3);
+	HAL_Delay(100); // must have a delay to prevent BUS_BUSY, bug from MakeBlock
+	setPulse(ticks_per_rev, 3);
+	HAL_Delay(100);
+	setRatio(1.f, 3);
+	HAL_Delay(100);
+
+	//chassis_enc_move_mm_y(1000);
+	//HAL_Delay(1000);
+	//chassis_enc_move_mm_y(-1000);
 
 	printf("[OK] MeEncoderNew_Init()\r\n");
 }
