@@ -97,6 +97,14 @@ typedef enum
   CUSTOM_CONFIG  = 3,
 } struct_config_e;
 
+typedef enum
+{
+  SPD_CTRL       = 0,
+  ENC_CTRL_X     = 1,
+  ENC_CTRL_Y     = 2,
+  ENC_CTRL_W     = 3
+} move_cmd_e;
+
 /********** the information send to computer ***********/
 
 /**
@@ -121,6 +129,7 @@ typedef __packed struct
 	int16_t tof_5;
 	uint8_t sw_l;           /**< left limit switch */
 	uint8_t sw_r;           /**< right limit switch */
+	uint8_t enc_exec_done;  /**< encoder execution done, 0 if still in progress */
 } chassis_info_t;
 
 /**
@@ -155,6 +164,7 @@ typedef __packed struct
 typedef __packed struct
 {
   uint8_t          ctrl_mode; /* chassis control mode */
+	uint8_t          move_cmd;  /* command type */
   int16_t          x_spd;     /* x-axis move speed(mm/s) of chassis */
   int16_t          y_spd;     /* y-axis move speed(mm/s) of chassis */
   chassis_rotate_t w_info;    /* rotation control of chassis */

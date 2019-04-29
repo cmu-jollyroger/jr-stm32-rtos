@@ -149,4 +149,6 @@ void update_chassis_info(void)
 	pc_send_mesg.chassis_information.tof_5 = chassis.range_tof[5];
 	pc_send_mesg.chassis_information.sw_l = chassis.limit_sw_l;    /**< left limit switch */
 	pc_send_mesg.chassis_information.sw_r = chassis.limit_sw_r;    /**< right limit switch */
+	pc_send_mesg.chassis_information.enc_exec_done = chassis.enc_exec_done;  /**< encoder execution done, 0 if still in progress */
+	
 }

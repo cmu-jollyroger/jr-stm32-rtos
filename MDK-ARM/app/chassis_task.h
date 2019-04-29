@@ -63,6 +63,8 @@ typedef struct
 	
 	uint8_t         limit_sw_l; // limit switch left, 0->open, 1->closed
 	uint8_t         limit_sw_r;
+	
+	uint8_t enc_exec_done;  /**< encoder execution done, 0 if still in progress */
 } chassis_t;
 
 void chassis_task(void const *argu);
