@@ -210,6 +210,8 @@ void chassis_task(void const *argu) {
 	
 	uint32_t chassis_wake_time = osKernelSysTick();
 	
+	chassis.enc_exec_done = 1;
+	
 	while (1) {
 		
 		chassis_ctrl_t *chassis_ctrl = (chassis_ctrl_t*)&pc_recv_mesg;
@@ -219,6 +221,7 @@ void chassis_task(void const *argu) {
 		float vw = chassis_ctrl->w_info.w_spd;
 		
 		if (move_cmd != SPD_CTRL) {
+			/* Encoder operation */
 			chassis.enc_exec_done = 0;
 			if (move_cmd == ENC_CTRL_X) {
 				chassis_enc_move_mm_x(vx);
@@ -229,17 +232,19 @@ void chassis_task(void const *argu) {
 			}
 			chassis_ctrl->move_cmd = SPD_CTRL;
 			chassis.enc_exec_done = 1;
-		} 
-		
-//		int16_t speed[4];
-//		
-//		mecanum_calc(vx, vy, vw, speed);
-//		
-//		runSpeed((float)-speed[0], 1, 0);
-//		runSpeed((float)-speed[1], 1, 1);
-//		runSpeed((float)-speed[2], 1, 2);
-//		runSpeed((float)-speed[3], 1, 3);
-//		
+		} else {
+			// move_cmd == SPD_CTRL
+			/* Speed command */
+			int16_t speed[4];
+			
+			mecanum_calc(vx, vy, vw, speed);
+			
+			runSpeed((float)-speed[0], 1, 0);
+			runSpeed((float)-speed[1], 1, 1);
+			runSpeed((float)-speed[2], 1, 2);
+			runSpeed((float)-speed[3], 1, 3);
+		}
+
 		osDelayUntil(&chassis_wake_time, 100);  // 10Hz
 	}
 }
