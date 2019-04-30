@@ -129,31 +129,34 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[])
 }
 
 void chassis_enc_turn_deg(int16_t degrees) {
+	if (abs(degrees) < 5) return;
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 0);
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 1);
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 2);
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 3);
-	while (!isTarPosReached(0) || !isTarPosReached(3)) {
+	while (!isTarPosReached(0)) {
 		continue;
 	}
 }
 
 void chassis_enc_move_mm_y(int16_t dist_mm) {
+	if (abs(dist_mm) < 10) return;
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 0);
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 1);
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 2);
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 3);
-	while (!isTarPosReached(0) || !isTarPosReached(3)) {
+	while (!isTarPosReached(0)) {
 		continue;
 	}
 }
 
 void chassis_enc_move_mm_x(int16_t dist_mm) {
+	if (abs(dist_mm) < 10) return;
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 0);
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 1);
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 2);
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 3);
-	while (!isTarPosReached(0) || !isTarPosReached(3)) {
+	while (!isTarPosReached(0)) {
 		continue;
 	}
 }
@@ -243,6 +246,9 @@ void chassis_task(void const *argu) {
 			runSpeed((float)-speed[1], 1, 1);
 			runSpeed((float)-speed[2], 1, 2);
 			runSpeed((float)-speed[3], 1, 3);
+			
+			/* Reset enc exec if vel command is received */
+			chassis.enc_exec_done = 1;
 		}
 
 		osDelayUntil(&chassis_wake_time, 100);  // 10Hz
