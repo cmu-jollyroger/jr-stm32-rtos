@@ -128,35 +128,64 @@ void mecanum_calc(float vx, float vy, float vw, int16_t speed[])
     memcpy(speed, wheel_rpm, 4 * sizeof(int16_t));
 }
 
+int16_t last_enc_reading = 0;
+
 void chassis_enc_turn_deg(int16_t degrees) {
+	int16_t cur_enc_reading = 0;
+	last_enc_reading = 0;
 	if (abs(degrees) < 5) return;
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 0);
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 1);
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 2);
 	move((long) (degrees * MOT_DEG_PER_ROT_DEG), MOT_ROT_SPD, 1, 3);
 	while (!isTarPosReached(0)) {
+		cur_enc_reading = getCurrentPosition(0);
+		if (abs(last_enc_reading - cur_enc_reading) < 3) {
+			buzz_n_times_with_delay(3, 50);
+			break;
+		}
+		last_enc_reading = cur_enc_reading;
+		HAL_Delay(1000);
 		continue;
 	}
 }
 
 void chassis_enc_move_mm_y(int16_t dist_mm) {
+	int16_t cur_enc_reading = 0;
+	last_enc_reading = 0;
 	if (abs(dist_mm) < 10) return;
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 0);
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 1);
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 2);
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 3);
 	while (!isTarPosReached(0)) {
+		cur_enc_reading = getCurrentPosition(0);
+		if (abs(last_enc_reading - cur_enc_reading) < 3) {
+			buzz_n_times_with_delay(3, 50);
+			break;
+		}
+		last_enc_reading = cur_enc_reading;
+		HAL_Delay(1000);
 		continue;
 	}
 }
 
 void chassis_enc_move_mm_x(int16_t dist_mm) {
+	int16_t cur_enc_reading = 0;
+	last_enc_reading = 0;
 	if (abs(dist_mm) < 10) return;
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 0);
 	move((long) -(dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 1);
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 2);
 	move((long) (dist_mm * MOT_DEG_PER_DIS_MM), MOT_TRA_SPD, 1, 3);
 	while (!isTarPosReached(0)) {
+		cur_enc_reading = getCurrentPosition(0);
+		if (abs(last_enc_reading - cur_enc_reading) < 3) {
+			buzz_n_times_with_delay(3, 50);
+			break;
+		}
+		last_enc_reading = cur_enc_reading;
+		HAL_Delay(1000);
 		continue;
 	}
 }
